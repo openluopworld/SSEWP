@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="PageRank"
+  id="myeclipse.1434473588169"
+  context-root="/PageRank"
+  j2ee-spec="5.0"
+  archive="PageRank.war">
+  <attributes>
+    <attribute name="webrootdir" value="WebRoot" />
+  </attributes>
+</project-module>
+
