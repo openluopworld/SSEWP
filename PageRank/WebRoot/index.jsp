@@ -25,5 +25,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		  <input type="text" height="20px" width="200px" name="keywords">
 		  <input type="submit" value="搜索">
 	  </form>
+	  <hr color="red">
+	  <p>"/pagerank/crawl" to get urls from the Internet</p>
+	  <p>"/pagerank/compute" to compute the rank of each url.</p>
+	  <p>"/pagerank/index.jsp" input the key word, and search for result.</p>
   </body>
 </html>
