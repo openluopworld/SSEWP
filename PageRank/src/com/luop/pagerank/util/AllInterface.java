@@ -192,7 +192,8 @@ public class AllInterface extends DBUtil {
 			if ( conn != null ) {
 				state = conn.createStatement();
 				sql = "select url from urls where url = '" + bean.getUrl() + "'";
-				if ( null == state.executeQuery(sql)) { // if the url dose not exist,
+				resultSet = state.executeQuery(sql);
+				if ( !resultSet.next() ) { // if the url dose not exist,
 					conn.setAutoCommit(false);
 					state.executeUpdate("insert into urls values('" + bean.getUrl()
 							+ "', " + bean.getId()
@@ -220,6 +221,12 @@ public class AllInterface extends DBUtil {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				System.out.println("Rollback, url=" + bean.getUrl());
+				e1.printStackTrace();
+			}
 		} finally {
 			try {
 				dbClose();

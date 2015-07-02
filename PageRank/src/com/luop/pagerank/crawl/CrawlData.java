@@ -22,6 +22,8 @@ import com.luop.pagerank.util.AllInterface;
  *
  */
 public class CrawlData {
+	
+	private String URL = "^(http://|https://)?((?:[A-Za-z0-9]+-[A-Za-z0-9]+|[A-Za-z0-9]+)\\.)+([A-Za-z]+)[/\\?\\:]?.*$";
 
 	private Set<String> urlsSet = null;   // the  urls waiting to be crawled
 	private int urlId = 1;                // the id of an url
@@ -66,6 +68,10 @@ public class CrawlData {
 	 */
 	private void pageContent( String url) {
 		
+		if ( !url.matches(URL)) {
+			return;
+		}
+		
 		List<String> outlinks = null; // out link urls
 		UrlBean bean = null;          // basic info of the url
 		
@@ -82,16 +88,23 @@ public class CrawlData {
 			/*
 			 * 文章基本信息
 			 */
-			element = document.getElementsByTag("title").get(0);
+			elements = document.getElementsByTag("title");
+			if ( elements!= null && elements.size() != 0) {
+				element = elements.get(0);
+			}
 			String title = element.text();
 			bean.setTitle(title);
 			bean.setKeywords(title);
 			
 			elements = document.getElementsByTag("a");
 			if ( elements != null) {
+				String linkUrl = null;
 				outlinks = new ArrayList<String>();
 				for ( int i = 0; i < elements.size(); i++) {
-					outlinks.add(elements.get(i).attr("href"));
+					linkUrl = elements.get(i).attr("href");
+					if ( linkUrl.matches(URL)) {
+						outlinks.add(linkUrl);
+					}
 				}
 			}
 		} catch (IOException e) {
