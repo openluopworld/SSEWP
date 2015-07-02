@@ -191,28 +191,30 @@ public class AllInterface extends DBUtil {
 			conn = getConnection();
 			if ( conn != null ) {
 				state = conn.createStatement();
-				
-				conn.setAutoCommit(false);
-				state.executeUpdate("insert into urls values('" + bean.getUrl()
-						+ "', " + bean.getId()
-						+ ", '" + bean.getTitle()
-						+ "', '" + bean.getKeywords()
-						+ "', " + bean.getOutlinks()
-						+ ", " + bean.getRank()
-						+ ")");
-				System.out.println("insert into urls values('" + bean.getUrl()
-						+ "', " + bean.getId()
-						+ ", '" + bean.getTitle()
-						+ "', '" + bean.getKeywords()
-						+ "', " + bean.getOutlinks()
-						+ ", " + bean.getRank()
-						+ ")");
-				sql = "insert into links values('" + bean.getUrl() + "', '?')";
-				for ( int i = 0; i < outlinks.size(); i++ ) {
-					state.executeUpdate(sql.replace("?", outlinks.get(i)));
+				sql = "select url from urls where url = '" + bean.getUrl() + "'";
+				if ( null == state.executeQuery(sql)) { // if the url dose not exist,
+					conn.setAutoCommit(false);
+					state.executeUpdate("insert into urls values('" + bean.getUrl()
+							+ "', " + bean.getId()
+							+ ", '" + bean.getTitle()
+							+ "', '" + bean.getKeywords()
+							+ "', " + bean.getOutlinks()
+							+ ", " + bean.getRank()
+							+ ")");
+					System.out.println("insert into urls values('" + bean.getUrl()
+							+ "', " + bean.getId()
+							+ ", '" + bean.getTitle()
+							+ "', '" + bean.getKeywords()
+							+ "', " + bean.getOutlinks()
+							+ ", " + bean.getRank()
+							+ ")");
+					sql = "insert into links values('" + bean.getUrl() + "', '?')";
+					for ( int i = 0; i < outlinks.size(); i++ ) {
+						state.executeUpdate(sql.replace("?", outlinks.get(i)));
+					}
+					conn.commit();
+					result = true;
 				}
-				conn.commit();
-				result = true;
 			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -228,4 +230,5 @@ public class AllInterface extends DBUtil {
 		
 		return result;
 	}
+
 }

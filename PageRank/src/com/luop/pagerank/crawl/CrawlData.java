@@ -24,7 +24,7 @@ import com.luop.pagerank.util.AllInterface;
 public class CrawlData {
 
 	private Set<String> urlsSet = null;   // the  urls waiting to be crawled
-	private int urlId = 0;                // the id of an url
+	private int urlId = 1;                // the id of an url
 	
 	private Document document = null;
 	private Elements elements = null;
@@ -48,7 +48,7 @@ public class CrawlData {
 		
 		urlsSet = new HashSet<String>();
 		urlsSet.add("http://news.baidu.com/");
-		while ( !urlsSet.isEmpty() ) {
+		while ( !urlsSet.isEmpty() && urlId < Integer.MAX_VALUE) {
 			urlsArray = urlsSet.toArray();
 			urlsSet.clear();
 			
@@ -111,10 +111,14 @@ public class CrawlData {
 			if ( new AllInterface().addOneUrlInfo(bean, outlinks)) {
 				System.out.println("Add to database successfully, url is '" + url + "'.");
 			} else {
-				System.out.println("Fail to add to database, url is '" + url + "'.");
+				System.out.println("Fail to add to database, maybe url exists. Url is '" + url + "'.");
 			}
+			System.out.println("[" + count + " urls remain...]");
+			System.out.println();
 		} else {
 			System.out.println("Error occurs in crawl, url is '" + url + "'.");
+			System.out.println("[[FINISHED]]");
+			System.out.println();
 		}
 		
 	}
