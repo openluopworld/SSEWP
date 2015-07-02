@@ -178,4 +178,54 @@ public class AllInterface extends DBUtil {
 		return urls;
 	}
 	
+	/**
+	 * Add the info of url to database
+	 * @param bean the basic info of url
+	 * @param outlinks the outlinks of url
+	 * @return true if add successfully, else return false 
+	 */
+	public boolean addOneUrlInfo ( UrlBean bean, List<String> outlinks ) {
+		boolean result = false;
+		
+		try {
+			conn = getConnection();
+			if ( conn != null ) {
+				state = conn.createStatement();
+				
+				conn.setAutoCommit(false);
+				state.executeUpdate("insert into urls values('" + bean.getUrl()
+						+ "', " + bean.getId()
+						+ ", '" + bean.getTitle()
+						+ "', '" + bean.getKeywords()
+						+ "', " + bean.getOutlinks()
+						+ ", " + bean.getRank()
+						+ ")");
+				System.out.println("insert into urls values('" + bean.getUrl()
+						+ "', " + bean.getId()
+						+ ", '" + bean.getTitle()
+						+ "', '" + bean.getKeywords()
+						+ "', " + bean.getOutlinks()
+						+ ", " + bean.getRank()
+						+ ")");
+				sql = "insert into links values('" + bean.getUrl() + "', '?')";
+				for ( int i = 0; i < outlinks.size(); i++ ) {
+					state.executeUpdate(sql.replace("?", outlinks.get(i)));
+				}
+				conn.commit();
+				result = true;
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				dbClose();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
 }
